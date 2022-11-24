@@ -36,7 +36,7 @@ public class Game {
             players[i] = new Player();
         //Fix for player1 automatically rolling first run.
         scan.nextLine();
-        String[][] fieldInfo = {
+        /*String[][] fieldInfo = {
                 {"Start", "You start here"},
                 {"Tower","You climbed the tower and found a chest on the top floor, you found 250 coins"},
                 {"Crater", "You fell in the crater and broke your leg in the fall, you spend 100 gold on the hospital-bill."},
@@ -50,14 +50,17 @@ public class Game {
                 {"The pit", "You fall down a steep pit, there's a vending machine in the corner of the pit selling ladders, you buy one for 50 gold and climb out."},
                 {"Goldmine", "JACKPOT! You find your way to the Goldmine and mine the a big chunk of gold, you recieve 650 coins!"}
         };
-        int[] fieldValues = {0,250, -100, 100, -20, 180, 0, -70, 60, -80, -50, 650};
+        int[] fieldValues = {0,250, -100, 100, -20, 180, 0, -70, 60, -80, -50, 650};*/
 
         //Creating all the GUI
-        GUI_Field[] fields = new GUI_Field[12];
-        for (int i = 0; i < 12; i++) {
+        GUI_Field[] fields = new GUI_Field[Gameboard.fields.size()];
+        //Initializing board fields
+        String[] fieldInfo = new String[Gameboard.fields.size()];
+        for (int i = 0; i < fields.length; i++) {
             fields[i] = new GUI_Street();
-            fields[i].setTitle(String.valueOf(fieldInfo[i][0]));
-            fields[i].setSubText(String.valueOf(fieldInfo[i][1]));
+            fields[i].setTitle(Gameboard.fields.get(i).getName());
+            fieldInfo[i] = Gameboard.fields.get(i).getName();
+            fields[i].setSubText("String.valueOf(fieldInfo[i][1])");
         }
         GUI gui = new GUI(fields);
 
@@ -92,14 +95,14 @@ public class Game {
 
 
             for(int i = 0; i < playerCount; i++) {
-                if (playTurn(rc, d1, d2, players[i], fieldInfo, fieldValues, scan)) {cont=false; break;}
+                if (playTurn(rc, d1, d2, players[i], fieldInfo, scan)) {cont=false; break;}
                 //gui
                 //remove car from old space
                 fields[players[i].getPlayerPosition()].setCar(gui_players[i], false);
                 //calculate new space
                 players[i].setPlayerPosition(players[i].getPlayerPosition() + rc.getSum(d1, d2));
-                if (players[i].getPlayerPosition() >= fieldValues.length)
-                    players[i].setPlayerPosition(players[i].getPlayerPosition() - fieldValues.length);
+                if (players[i].getPlayerPosition() >= Gameboard.fields.size())
+                    players[i].setPlayerPosition(players[i].getPlayerPosition() - Gameboard.fields.size());
                 //add car to new space
                 fields[players[i].getPlayerPosition()].setCar(gui_players[i], true);
 
@@ -117,7 +120,7 @@ public class Game {
     }
 
 
-    public static boolean playTurn(Rafflecup rc, Dice d1, Dice d2, Player p, String[][] info, int[] values, Scanner scan) {
+    public static boolean playTurn(Rafflecup rc, Dice d1, Dice d2, Player p, String[] info, Scanner scan) {
 
         System.out.println("Player " + p.getPlayerNumber() + "'s turn to shake and roll the dice!");
 
@@ -127,20 +130,20 @@ public class Game {
 
         int rollValue = rc.getSum(d1,d2);
 
-        String title = info[rollValue-1][0];
+        String title = info[rollValue-1];
 
-        int value = values[rollValue-1];
+        //int value = values[rollValue-1];
 
-        String description = info[rollValue-1][1];
+        //String description = info[rollValue-1][1];
 
 
 
-        if(p.getAccount().getWallet()+value >= 0)
+        /*if(p.getAccount().getWallet()+value >= 0)
             System.out.println("You rolled: " + rollValue + "\n" + "You landed on the field: " + title + "\n" + description);
         else System.out.println("You rolled: "+rollValue+"\n"+"You landed on field: "+title+"\n"+"" +
                 "As you have no money your guardian angel came to the rescue and saved you by picking up the tab");
-
-
+*/
+/*
         if (value >= 0) {
             System.out.println(p.getAccount().deposit(value));
         } else if(p.getAccount().getWallet()+value>=0){
@@ -150,11 +153,11 @@ public class Game {
                     "Your new balance is: 0");
             p.getAccount().setWallet(0);
 
-        }
+        }*/
 
         if (rollValue == 10) {
             System.out.println("You got an extra turn!");
-            playTurn(rc, d1, d2, p, info, values, scan);
+            playTurn(rc, d1, d2, p, info, scan);
         }
         System.out.println();
 

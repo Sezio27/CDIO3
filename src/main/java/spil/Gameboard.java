@@ -5,7 +5,7 @@ import Fields.*;
 import java.util.ArrayList;
 
 public class Gameboard {
-    ArrayList<Field> fields;
+    static ArrayList<Field> fields;
 
     public Gameboard() {
         fields = new ArrayList<>();
